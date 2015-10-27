@@ -1,0 +1,30 @@
+import ij.IJ;
+import ij.ImagePlus;
+import ij.process.StackConverter;
+import ij3d.Content;
+import ij3d.Image3DUniverse;
+
+
+public class TrajectoryViewer {
+
+	public static void main(String[] args) {
+		String dir = "D:/git/3DIMG2015/3DImg_javaProj2015";
+		String file = "cochlee_resample.img";
+		String path = dir + "/"+file;
+		ImagePlus imp = tryPlugIn("",path);
+	    
+	    
+		new StackConverter(imp).convertToGray8();
+		Image3DUniverse univ = new Image3DUniverse();
+		univ.show();
+		Content c = univ.addVoltex(imp);
+
+	}
+	
+	private ImagePlus tryPlugIn(String className, String path) {
+		Object o = IJ.runPlugIn(className, path);
+		ImagePlus imp = (ImagePlus)o;
+		return imp;
+	}
+
+}
