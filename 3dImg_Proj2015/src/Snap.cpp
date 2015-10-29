@@ -56,18 +56,34 @@ int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResu
     crossProduct(cross,direction,up);
     normalize(direction);normalize(up);normalize(cross);if(n == 0)showVectors();
 */
+    normalize(direction);normalize(up);normalize(cross);
 
     for(int x = 0; x < imageResult->width();x++)
     {
-//        multVector((double)(x),cross,xComp);
+        //multVector((double)(x),cross,xComp);
         multVector((double)(-(imageResult->width()/2) + x) ,cross,xComp);
         for(int y = 0; y < imageResult->height();y++)
         {
             //multVector((double)(y),up,yComp);
             multVector((double)( (imageResult->height()/2) - y) ,up,yComp);
             addVectors(xComp,yComp,point);
+
+
             addVectors(position,point,point);
-            (*imageResult)(x,y,n,0) = imageSource->cubic_atXYZ(point[0],point[1],point[2]);
+            //showVector(point);
+            /*
+            if(y <imageResult->height()/2 &&cross[0]!=0)
+            {
+                cout <<"new"<<endl;
+                 showVector(position);
+                 showVector(point);
+                showVector(xComp);
+                 showVector(yComp);
+                 showVector(cross);
+                 showVector(up);
+            }*/
+
+            (*imageResult)(x,y,n,0) = imageSource->linear_atXYZ(point[0],point[1],point[2],0,0);
         }
     }
 

@@ -108,13 +108,13 @@ vector<Snap*>* makeJobListFromFile(char* filePath)
             cout<<"endfile"<<endl;
             break;
         }
-        tabControl[i].SetX(x);
-        tabControl[i].SetY(y);
-        tabControl[i].SetZ(z);
+        tabControl[i].SetX(x*10);
+        tabControl[i].SetY(y*10);
+        tabControl[i].SetZ(z*10);
         i++;
     }
     infile.close();
-    ret = BezierCurveByBernstein(tabControl,ret,sizeCp,100);
+    ret = BezierCurveByBernstein(tabControl,ret,sizeCp,200);
     free(tabControl);
 
     for(int j = 0 ; j < ret->size()-1 ; j++)
