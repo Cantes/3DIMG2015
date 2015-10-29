@@ -20,6 +20,8 @@ class Snap
         Snap* previous;
         int n;
         void showVectors();
+        void normalize(double v1[3]);
+        void initFirstSnap();
         int work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult);
     protected:
 };

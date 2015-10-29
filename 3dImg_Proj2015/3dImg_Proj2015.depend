@@ -2,16 +2,18 @@
 1445966650 source:d:\git\3dimg2015\3dimg_proj2015\src\snapjob.cpp
 	"SnapJob.h"
 
-1445967328 d:\git\3dimg2015\3dimg_proj2015\include\snapjob.h
+1445973823 d:\git\3dimg2015\3dimg_proj2015\include\snapjob.h
 
-1445981036 source:d:\git\3dimg2015\3dimg_proj2015\main.cpp
+1446122136 source:d:\git\3dimg2015\3dimg_proj2015\main.cpp
 	<iostream>
 	"CImg.h"
 	"Snap.h"
+	"Point.h"
 	<string>
 	<fstream>
 	<sstream>
 	<vector>
+	"include\vectorOps.h"
 
 1443005818 d:\git\3dimg2015\3dimg_proj2015\cimg.h
 	<cstdio>
@@ -67,10 +69,24 @@
 	"CImg.h"
 	<stdint.h>
 
-1445977121 d:\git\3dimg2015\3dimg_proj2015\include\snap.h
+1446119401 d:\git\3dimg2015\3dimg_proj2015\include\snap.h
 	"../CImg.h"
 	<iostream>
 
-1445980528 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
+1446121982 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
 	"Snap.h"
+	"..\include\vectorOps.h"
+
+1446116633 d:\git\3dimg2015\3dimg_proj2015\include\point.h
+
+1446116712 source:d:\git\3dimg2015\3dimg_proj2015\src\point.cpp
+	"Point.h"
+	<stdlib.h>
+
+1446121161 d:\git\3dimg2015\3dimg_proj2015\src\vectorops.c
+
+1446121242 d:\git\3dimg2015\3dimg_proj2015\include\vectorops.h
+
+1446121513 source:d:\git\3dimg2015\3dimg_proj2015\src\vectorops.cpp
+	"vectorOps.h"
 
