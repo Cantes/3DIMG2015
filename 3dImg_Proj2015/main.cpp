@@ -59,6 +59,138 @@ vector<Snap*>* BezierCurveByBernstein(Point* tabControl,vector<Snap*>* ret, long
     return ret;
 }
 
+
+double hermiteF1(double u)
+{
+    return (2.0*u*u*u) - (3.0 * u * u ) + 1.0;
+}
+double hermiteF2(double u)
+{
+    return -(2.0*u*u*u) + (3.0 * u * u );
+}
+double hermiteF3(double u)
+{
+    return (u*u*u) - (2.0 * u * u ) + u;
+}
+double hermiteF4(double u)
+{
+    return (u*u*u) - (u * u );
+}
+
+void makeHermitVector(Point *result,Point *prev,Point *cur,Point *next)
+{
+    double vect[3];
+    double dist[3];
+
+    if(prev != NULL && next != NULL)
+    {
+        vect[0] = next->GetX()-prev->GetX();
+        vect[1] = next->GetY()-prev->GetY();
+        vect[2] = next->GetZ()-prev->GetZ();
+        normalized(vect);
+        dist[0] = next->GetX()-cur->GetX();
+        dist[1] = next->GetY()-cur->GetY();
+        dist[2] = next->GetZ()-cur->GetZ();
+        multVector(norm(dist)/3.0,vect,vect);
+        result->SetX(vect[0]);
+        result->SetY(vect[1]);
+        result->SetZ(vect[2]);
+
+    }else
+    {
+        if(prev == NULL)
+        {
+            result->SetX(next->GetX()-cur->GetX()/3.0);
+            result->SetY(next->GetY()-cur->GetY()/3.0);
+            result->SetZ(next->GetZ()-cur->GetZ()/3.0);
+        }
+        else
+        {
+            result->SetX(cur->GetX()-prev->GetX()/3);
+            result->SetY(cur->GetY()-prev->GetY()/3);
+            result->SetZ(cur->GetZ()-prev->GetZ()/3);
+        }
+    }
+}
+
+vector<Snap*>* HermiteCubicCurve(Point p1,Point p2, Point v1 , Point v2, long nbU,vector<Snap*>* ret, long *number)
+{
+    Snap* current;
+    double f1, f2 , f3 , f4;
+    long i = 0;
+
+    for(long i = 0; i < nbU ; i++)
+    {
+        current = new Snap();
+            f1 = hermiteF1(((double)i)/(((double)nbU)-1.0));
+            f2 = hermiteF2(((double)i)/(((double)nbU)-1.0));
+            f3 = hermiteF3(((double)i)/(((double)nbU)-1.0));
+            f4 = hermiteF4(((double)i)/(((double)nbU)-1.0));
+       current->position[0] =(f1*p1.GetX()+f2*p2.GetX()+f3*v1.GetX()+f4*v2.GetX());
+       current->position[1] =(f1*p1.GetY()+f2*p2.GetY()+f3*v1.GetY()+f4*v2.GetY());
+       current->position[2] =(f1*p1.GetZ()+f2*p2.GetZ()+f3*v1.GetZ()+f4*v2.GetZ());
+       current->n = *number;
+       if(ret->size() == 0 || (ret->size() > 0 && (ret->back()->position[0] != current->position[0] ||ret->back()->position[1] != current->position[1] ||ret->back()->position[2] != current->position[2])))
+       {
+            (*number)++;
+            //cout<< tab[i].GetX() << " - "<< tab[i].GetY() << " - "<< tab[i].GetZ() << endl;
+            ret->push_back(current);
+       }
+       else{
+        free(current);
+       }
+    }
+    return ret;
+}
+
+vector<Snap*>* hermit(Point* tabControl,vector<Snap*>* ret,long nCp, long nbU)
+{
+    long cnt = 0;
+    double norm1 = 0;
+    double currentNorm = 0;
+    double vect[3];
+    Point v1,v2;
+    for(long i = 0; i < nCp-1 ; i++)
+    {
+        vect[0] = tabControl[i+1].GetX() - tabControl[i].GetX();
+        vect[1] = tabControl[i+1].GetY() - tabControl[i].GetY();
+        vect[2] = tabControl[i+1].GetZ() - tabControl[i].GetZ();
+        norm1 += norm(vect);
+    }
+
+    for(long i = 0; i < nCp - 1; i++)
+    {
+        vect[0] = tabControl[i+1].GetX() - tabControl[i].GetX();
+        vect[1] = tabControl[i+1].GetY() - tabControl[i].GetY();
+        vect[2] = tabControl[i+1].GetZ() - tabControl[i].GetZ();
+        currentNorm = norm(vect);
+        makeHermitVector(&v1,i>0?&tabControl[i-1]:NULL,&tabControl[i],&tabControl[i+1]);
+        makeHermitVector(&v2,i<nCp-2?&tabControl[i+2]:NULL,&tabControl[i+1],&tabControl[i]);
+        ret = HermiteCubicCurve(tabControl[i],tabControl[i+1],v1,v2
+                                ,max(2,(int)((currentNorm/norm1) * nbU))
+                                ,ret,&cnt);
+    }
+    return ret;
+}
+
+vector<Snap*>* direct(Point* tabControl,vector<Snap*>* ret,long nCp)
+{
+     Snap* current;
+
+    for(long i = 0; i < nCp-1 ; i++)
+    {
+
+        current = new Snap();
+             current->position[0] =tabControl[i].GetX();
+       current->position[1]  =tabControl[i].GetY();
+       current->position[2] =tabControl[i].GetZ();
+       current->n = i;
+       ret->push_back(current);
+    }
+
+    return ret;
+}
+
 void doubleReflectionAlgorithm(Snap* prev,Snap* cur)
 {
     double v1[3];
@@ -85,6 +217,37 @@ void doubleReflectionAlgorithm(Snap* prev,Snap* cur)
     crossProduct(cur->direction,cur->up,cur->cross);
 }
 
+void sortPoints(Point* tabControl,int ncp)
+{
+    Point temp;
+    double selNorm= 0;
+    int selJ;
+    double vect[3];
+    for(int i =0 ; i < ncp ; i++)
+    {
+        selJ = i+1;
+        selNorm = 0;
+        for(int j = i+1; j<ncp;j++)
+        {
+            vect[0] = tabControl[j].GetX()-tabControl[i].GetX();
+            vect[1] = tabControl[j].GetY()-tabControl[i].GetY();
+            vect[2] = tabControl[j].GetZ()-tabControl[i].GetZ();
+            if(selNorm ==0 || norm(vect) < selNorm)
+            {
+                selNorm = norm(vect);
+                selJ = j;
+            }
+        }
+        if(selJ != i+1)
+        {
+            temp.setPoint(&tabControl[selJ]);
+            tabControl[selJ].setPoint(&tabControl[i+1]);
+            tabControl[i+1].setPoint(&temp);
+            //cout<<"sort"<<endl;
+        }
+    }
+}
+
 vector<Snap*>* makeJobListFromFile(char* filePath)
 {
     vector<Snap*>* ret = new vector<Snap*>();
@@ -108,13 +271,21 @@ vector<Snap*>* makeJobListFromFile(char* filePath)
             cout<<"endfile"<<endl;
             break;
         }
-        tabControl[i].SetX(x*10);
-        tabControl[i].SetY(y*10);
-        tabControl[i].SetZ(z*10);
+
+        tabControl[i].SetX(x*1);
+        tabControl[i].SetY(y*1);
+        tabControl[i].SetZ(z*1);
         i++;
     }
     infile.close();
+
+    sortPoints(tabControl,sizeCp);
+
     ret = BezierCurveByBernstein(tabControl,ret,sizeCp,200);
+    cout<<"interpolation "<<endl;
+    //ret = hermit(tabControl,ret,sizeCp,200);
+    //ret = direct(tabControl,ret,sizeCp);
+    cout<<"interpolation done"<<endl;
     free(tabControl);
 
     for(int j = 0 ; j < ret->size()-1 ; j++)
@@ -149,6 +320,24 @@ vector<Snap*>* makeJobListFromFile(char* filePath)
     return ret;
 }
 
+void printMarks( vector<Snap*>* jobList)
+{
+     ofstream file;
+  file.open ("myTraj.points");
+  file << "# frame 0"<<endl;
+
+    for(int i =0 ; i < jobList->size(); i++)
+    {
+        file << "\"point"<< i+1 <<"\": [ "<<jobList->at(i)->position[0]<<","<<jobList->at(i)->position[1]<<","<<jobList->at(i)->position[2]<<"]"<<endl;
+        /*
+        file << "\"point"<< (i*2)+1 <<"\": [ "<<jobList->at(i)->position[0]<<","<<jobList->at(i)->position[1]<<","<<jobList->at(i)->position[2]<<"]"<<endl;
+        file << "\"point"<< (i*2)+2 <<"\": [ "<<jobList->at(i)->position[0]+jobList->at(i)->up[0]<<","<<jobList->at(i)->position[1]+jobList->at(i)->up[1]<<","<<jobList->at(i)->position[2]+jobList->at(i)->up[2]<<"]"<<endl;
+*/
+    }
+    file.close();
+
+}
+
 int main()
 {
     CImg<unsigned short> *image = new CImg<unsigned short>();
@@ -160,16 +349,25 @@ int main()
     cout << "Hello trajectory!" << endl;
 
     image->load_analyze("cochlee_resample.img", voxtabsize);
+    //image->load_analyze("isolePlage.img", voxtabsize);
+    //image->load_analyze("isolePlage2.img", voxtabsize);
     jobList = makeJobListFromFile("landmarks.ldk");
-
+    //0.1214 x 0.125 x 0.1220 mm
+    cout<<"0.1214 x 0.125 x 0.1220 mm"<<endl;
+    cout<<voxtabsize[0]<<" "<<voxtabsize[1]<<" "<<voxtabsize[2]<<endl;
     maxCoord = max(image->width(),max(image->height(),image->depth()));
-    imageResult = new CImg<unsigned short>(maxCoord,maxCoord,jobList->size());
+    imageResult = new CImg<unsigned short>(maxCoord/2,maxCoord/2,jobList->size());
+    cout << "print marks" << endl;
+    printMarks(jobList);
+    cout << "print marks done" << endl;
     for(int i = 0 ; i < jobList->size();i++)
     {
-        jobList->at(i)->work(image,imageResult);
+        jobList->at(i)->work(image,imageResult,voxtabsize);
         free(jobList->at(i));
     }
     free(jobList);
-    imageResult->save_analyze("result.img");
+    //imageResult->save_analyze("result-isole2.img");
+    //imageResult->save_analyze("result-isole.img");
+    imageResult->save_analyze("result2.img");
     return 0;
 }

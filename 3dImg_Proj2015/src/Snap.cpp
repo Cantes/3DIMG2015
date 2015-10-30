@@ -38,12 +38,28 @@ void Snap::initFirstSnap()
     normalize(direction);normalize(up);normalize(cross);
 }
 
-int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult)
+
+void multcompVect(double v1[3],double v2[3],double v3[3])
+{
+    v3[0] = v1[0]*v2[0];
+    v3[1] = v1[1]*v2[1];
+    v3[2] = v1[2]*v2[2];
+}
+
+void divcompVect(double v1[3],double v2[3],double v3[3])
+{
+    v3[0] = v1[0]/v2[0];
+    v3[1] = v1[1]/v2[1];
+    v3[2] = v1[2]/v2[2];
+}
+
+int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult ,float voxtabsize[3])
 {
     double point[3];
     double xComp[3];
     double yComp[3];
 
+    cout<<"doing : "<< n <<endl;
 /*
     if(previous != NULL)
         for(int i =0 ; i < 3 ;i++)
@@ -57,6 +73,12 @@ int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResu
     normalize(direction);normalize(up);normalize(cross);if(n == 0)showVectors();
 */
     normalize(direction);normalize(up);normalize(cross);
+    double voxsize[3] = { voxtabsize[0] , voxtabsize[1] , voxtabsize[2] };
+    showVector(voxsize);
+    //divcompVect(direction,voxsize,direction);
+    //divcompVect(up,voxsize,up);
+    //divcompVect(cross,voxsize,cross);
+    divcompVect(position,voxsize,position);
 
     for(int x = 0; x < imageResult->width();x++)
     {

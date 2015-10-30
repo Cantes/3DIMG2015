@@ -15,6 +15,13 @@ Point::Point(double x,double y,double z)
     Z = z;
 }
 
+void Point::setPoint(Point* other)
+{
+    X = other->GetX();
+    Y = other->GetY();
+    Z = other->GetZ();
+}
+
 Point::~Point()
 {
     //dtor

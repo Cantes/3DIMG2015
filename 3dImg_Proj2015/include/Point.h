@@ -10,6 +10,7 @@ class Point
         virtual ~Point();
         Point(Point* other);
 
+        void setPoint(Point* other);
         double GetX() { return X; }
         void SetX(double val) { X = val; }
         double GetY() { return Y; }

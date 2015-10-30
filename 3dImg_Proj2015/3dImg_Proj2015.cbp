@@ -30,6 +30,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="gdi32" />
 				</Linker>
 			</Target>
 		</Build>
@@ -40,12 +41,10 @@
 		<Unit filename="CImg.h" />
 		<Unit filename="include/Point.h" />
 		<Unit filename="include/Snap.h" />
-		<Unit filename="include/SnapJob.h" />
 		<Unit filename="include/vectorOps.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Point.cpp" />
 		<Unit filename="src/Snap.cpp" />
-		<Unit filename="src/SnapJob.cpp" />
 		<Unit filename="src/vectorOps" />
 		<Unit filename="src/vectorOps.cpp" />
 		<Extensions>
