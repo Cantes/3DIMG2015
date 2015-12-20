@@ -15,7 +15,7 @@
 	<vector>
 	"include\vectorOps.h"
 
-1443005818 d:\git\3dimg2015\3dimg_proj2015\cimg.h
+1450632896 d:\git\3dimg2015\3dimg_proj2015\cimg.h
 	<cstdio>
 	<cstdlib>
 	<cstdarg>
@@ -73,7 +73,7 @@
 	"../CImg.h"
 	<iostream>
 
-1446214780 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
+1450626896 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
 	"Snap.h"
 	"..\include\vectorOps.h"
 
@@ -90,4 +90,19 @@
 1446214144 source:d:\git\3dimg2015\3dimg_proj2015\src\vectorops.cpp
 	"vectorOps.h"
 	<cmath>
+
+1450627034 source:d:\git\3dimg2015\3dimg_proj2015\src\pathrenderer.cpp
+	"PathRenderer.h"
+
+1450627015 d:\git\3dimg2015\3dimg_proj2015\include\pathrenderer.h
+	<cstddef>
+	<iostream>
+	"..\CImg.h"
+	"Snap.h"
+	"Point.h"
+	<string>
+	<fstream>
+	<sstream>
+	<vector>
+	"vectorOps.h"
 

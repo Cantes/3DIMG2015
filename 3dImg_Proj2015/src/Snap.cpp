@@ -59,7 +59,7 @@ int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResu
     double xComp[3];
     double yComp[3];
 
-    cout<<"doing : "<< n <<endl;
+    //cout<<"doing : "<< n <<endl;
 /*
     if(previous != NULL)
         for(int i =0 ; i < 3 ;i++)
@@ -74,7 +74,7 @@ int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResu
 */
     normalize(direction);normalize(up);normalize(cross);
     double voxsize[3] = { voxtabsize[0] , voxtabsize[1] , voxtabsize[2] };
-    showVector(voxsize);
+    //showVector(voxsize);
     //divcompVect(direction,voxsize,direction);
     //divcompVect(up,voxsize,up);
     //divcompVect(cross,voxsize,cross);
