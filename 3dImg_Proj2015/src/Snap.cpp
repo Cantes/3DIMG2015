@@ -53,59 +53,28 @@ void divcompVect(double v1[3],double v2[3],double v3[3])
     v3[2] = v1[2]/v2[2];
 }
 
-int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult ,float voxtabsize[3])
+int Snap::work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult ,float voxtabsize[3],int voxelInterp)
 {
     double point[3];
     double xComp[3];
     double yComp[3];
 
-    //cout<<"doing : "<< n <<endl;
-/*
-    if(previous != NULL)
-        for(int i =0 ; i < 3 ;i++)
-            up[i] = previous->up[i];
-*/
-    //showVector(position);
-    /*
-    normalize(direction);normalize(up);
-    crossProduct(direction,up,cross);
-    crossProduct(cross,direction,up);
-    normalize(direction);normalize(up);normalize(cross);if(n == 0)showVectors();
-*/
     normalize(direction);normalize(up);normalize(cross);
     double voxsize[3] = { voxtabsize[0] , voxtabsize[1] , voxtabsize[2] };
-    //showVector(voxsize);
-    //divcompVect(direction,voxsize,direction);
-    //divcompVect(up,voxsize,up);
-    //divcompVect(cross,voxsize,cross);
     divcompVect(position,voxsize,position);
 
     for(int x = 0; x < imageResult->width();x++)
     {
-        //multVector((double)(x),cross,xComp);
         multVector((double)(-(imageResult->width()/2) + x) ,cross,xComp);
         for(int y = 0; y < imageResult->height();y++)
         {
-            //multVector((double)(y),up,yComp);
             multVector((double)( (imageResult->height()/2) - y) ,up,yComp);
             addVectors(xComp,yComp,point);
-
-
             addVectors(position,point,point);
-            //showVector(point);
-            /*
-            if(y <imageResult->height()/2 &&cross[0]!=0)
-            {
-                cout <<"new"<<endl;
-                 showVector(position);
-                 showVector(point);
-                showVector(xComp);
-                 showVector(yComp);
-                 showVector(cross);
-                 showVector(up);
-            }*/
-
-            (*imageResult)(x,y,n,0) = imageSource->linear_atXYZ(point[0],point[1],point[2],0,0);
+            if(voxelInterp == 0)
+                (*imageResult)(x,y,n,0) = imageSource->linear_atXYZ(point[0],point[1],point[2],0,0);
+            else if(voxelInterp == 1)
+                (*imageResult)(x,y,n,0) = imageSource->cubic_atXYZ(point[0],point[1],point[2],0,0);
         }
     }
 

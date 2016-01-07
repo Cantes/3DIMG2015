@@ -7,7 +7,7 @@ PathRenderer::PathRenderer()
 
 PathRenderer::~PathRenderer()
 {
-    //dtor
+    delete sourceImage;
 }
 
 
@@ -30,9 +30,6 @@ double PolyBernstein(double n,double i, double u)
 vector<Snap*>* BezierCurveByBernstein(Point* tabControl,vector<Snap*>* ret, long nbCP , long nbU)
 {
     Snap* current;
-
-
-   // double f1, f2 , f3 , f4;
     long i = 0;
 
     for(long i = 0; i < nbU ; i++)
@@ -51,7 +48,6 @@ vector<Snap*>* BezierCurveByBernstein(Point* tabControl,vector<Snap*>* ret, long
             current->position[2] += (PolyBernstein(nbCP - 1, j, (double)i / (double)(nbU-1))*tabControl[j].GetZ());
 
         }
-        //cout<<current->position[0] <<" \t"<<current->position[1] <<" \t"<<current->position[2] <<endl;
         ret->push_back(current);
     }
     return ret;
@@ -177,7 +173,6 @@ vector<Snap*>* direct(Point* tabControl,vector<Snap*>* ret,long nCp)
 
     for(long i = 0; i < nCp-1 ; i++)
     {
-
         current = new Snap();
         current->position[0] =tabControl[i].GetX();
         current->position[1]  =tabControl[i].GetY();
@@ -215,6 +210,20 @@ void doubleReflectionAlgorithm(Snap* prev,Snap* cur)
     crossProduct(cur->direction,cur->up,cur->cross);
 }
 
+float estimatePathLength(Point* tabControl,int ncp)
+{
+    float ret = 0.0;
+    double vect[3];
+    for(int i =0 ; i < ncp - 1 ; i++)
+    {
+        vect[0] = tabControl[i+1].GetX()-tabControl[i].GetX();
+        vect[1] = tabControl[i+1].GetY()-tabControl[i].GetY();
+        vect[2] = tabControl[i+1].GetZ()-tabControl[i].GetZ();
+        ret += norm(vect);
+    }
+    return ret;
+}
+
 void sortPoints(Point* tabControl,int ncp)
 {
     Point temp;
@@ -245,7 +254,7 @@ void sortPoints(Point* tabControl,int ncp)
     }
 }
 
-vector<Snap*>* makeJobListFromFile(string filePath, int interpMethod, bool doSortPoint, int nPoints)
+vector<Snap*>* makeJobListFromFile(string filePath, int interpMethod, bool doSortPoint, int innPoints,float voxtabsize[3],float stepLength)
 {
     vector<Snap*>* ret = new vector<Snap*>();
     Snap* current;
@@ -255,6 +264,7 @@ vector<Snap*>* makeJobListFromFile(string filePath, int interpMethod, bool doSor
     int i = 0;
     int sizeCp = 0;
     double x,y,z;
+    int nPoints = innPoints;
 
     getline(infile, line);
     istringstream streamLine(line);
@@ -267,14 +277,19 @@ vector<Snap*>* makeJobListFromFile(string filePath, int interpMethod, bool doSor
         {
             break;
         }
-        tabControl[i].SetX(x*1);
-        tabControl[i].SetY(y*1);
-        tabControl[i].SetZ(z*1);
+        tabControl[i].SetX(x);
+        tabControl[i].SetY(y);
+        tabControl[i].SetZ(z);
         i++;
     }
     infile.close();
     if(doSortPoint)
         sortPoints(tabControl,sizeCp);
+    if(stepLength != 0.0)
+    {
+        float pathLength = estimatePathLength(tabControl,sizeCp);
+        nPoints = (int)(pathLength / stepLength);
+    }
     switch(interpMethod){
     case INTERP_DIRECT:
         {
@@ -325,7 +340,6 @@ void printMarks( vector<Snap*>* jobList, string outPath)
 {
     ofstream file;
     file.open (outPath.c_str());
-    file << "# frame 0"<<endl;
     for(int i =0 ; i < jobList->size(); i++)
     {
         file << "\"point"<< i+1 <<"\": [ "<<jobList->at(i)->position[0]<<","<<jobList->at(i)->position[1]<<","<<jobList->at(i)->position[2]<<"]"<<endl;
@@ -333,33 +347,48 @@ void printMarks( vector<Snap*>* jobList, string outPath)
     file.close();
 }
 
-bool PathRenderer::render()
+CImg<unsigned short> *PathRenderer::render()
 {
     CImg<unsigned short> *imageResult;
     vector<Snap*>* jobList;
-    int maxCoord = 0;
+    jobList = makeJobListFromFile(inPointsFilePath.c_str(),GetpathInterpolationMethod(),GetSortPoints(),GetstepCount(),voxtabsize,GetstepLength());
 
-    jobList = makeJobListFromFile(inPointsFilePath.c_str(),GetpathInterpolationMethod(),GetSortPoints(),GetstepCount());
-    maxCoord = max(sourceImage->width(),max(sourceImage->height(),sourceImage->depth()));
-    imageResult = new CImg<unsigned short>(maxCoord/2,maxCoord/2,jobList->size());
+    if(outX == 0 || outY == 0)
+    {
+        int maxCoord = 0;
+        maxCoord = max(sourceImage->width(),max(sourceImage->height(),sourceImage->depth()));
+        outX = maxCoord/2;
+        outY = maxCoord/2;
+    }
+    imageResult = new CImg<unsigned short>(outX,outY,jobList->size());
     if(outputPath)
         printMarks(jobList, outPointsFilePath);
     for(int i = 0 ; i < jobList->size();i++)
     {
-        jobList->at(i)->work(sourceImage,imageResult,voxtabsize);
-        free(jobList->at(i));
+        jobList->at(i)->work(sourceImage,imageResult,voxtabsize,voxelInterpolation);
+        delete jobList->at(i);
     }
     free(jobList);
+    return imageResult;
+}
+
+bool PathRenderer::renderToFile()
+{
+    CImg<unsigned short> *imageResult;
+    imageResult = render();
     imageResult->save_analyze(outImgFilePath.c_str());
+    delete imageResult;
     return true;
 }
 
 void PathRenderer::SetinImgFilePath(string val)
 {
     inImgFilePath = val;
+
     if(sourceImage != 0)
         delete sourceImage;
     sourceImage = new CImg<unsigned short>();
     sourceImage->load_analyze(inImgFilePath.c_str(),voxtabsize);
+
 }
 

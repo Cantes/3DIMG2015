@@ -4,7 +4,7 @@
 
 1445973823 d:\git\3dimg2015\3dimg_proj2015\include\snapjob.h
 
-1446214378 source:d:\git\3dimg2015\3dimg_proj2015\main.cpp
+1452181853 source:d:\git\3dimg2015\3dimg_proj2015\main.cpp
 	<iostream>
 	"CImg.h"
 	"Snap.h"
@@ -14,6 +14,7 @@
 	<sstream>
 	<vector>
 	"include\vectorOps.h"
+	"include\PathRenderer.h"
 
 1450632896 d:\git\3dimg2015\3dimg_proj2015\cimg.h
 	<cstdio>
@@ -69,11 +70,11 @@
 	"CImg.h"
 	<stdint.h>
 
-1446214160 d:\git\3dimg2015\3dimg_proj2015\include\snap.h
+1452182110 d:\git\3dimg2015\3dimg_proj2015\include\snap.h
 	"../CImg.h"
 	<iostream>
 
-1450626896 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
+1452181657 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
 	"Snap.h"
 	"..\include\vectorOps.h"
 
@@ -91,10 +92,10 @@
 	"vectorOps.h"
 	<cmath>
 
-1450627034 source:d:\git\3dimg2015\3dimg_proj2015\src\pathrenderer.cpp
+1452183405 source:d:\git\3dimg2015\3dimg_proj2015\src\pathrenderer.cpp
 	"PathRenderer.h"
 
-1450627015 d:\git\3dimg2015\3dimg_proj2015\include\pathrenderer.h
+1452182867 d:\git\3dimg2015\3dimg_proj2015\include\pathrenderer.h
 	<cstddef>
 	<iostream>
 	"..\CImg.h"

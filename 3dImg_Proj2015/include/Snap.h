@@ -22,7 +22,7 @@ class Snap
         void showVectors();
         void normalize(double v1[3]);
         void initFirstSnap();
-        int work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult,float voxtabsize[3]);
+        int work(CImg<unsigned short> *imageSource,CImg<unsigned short> *imageResult,float voxtabsize[3],int voxelInterp);
     protected:
 };
 #endif // SNAP_H

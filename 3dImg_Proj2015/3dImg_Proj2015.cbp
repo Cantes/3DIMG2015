@@ -39,10 +39,12 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="CImg.h" />
+		<Unit filename="include/PathRenderer.h" />
 		<Unit filename="include/Point.h" />
 		<Unit filename="include/Snap.h" />
 		<Unit filename="include/vectorOps.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/PathRenderer.cpp" />
 		<Unit filename="src/Point.cpp" />
 		<Unit filename="src/Snap.cpp" />
 		<Unit filename="src/vectorOps" />
