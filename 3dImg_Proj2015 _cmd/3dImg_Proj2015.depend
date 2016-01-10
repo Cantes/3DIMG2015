@@ -1,0 +1,109 @@
+# depslib dependency file v1.0
+1445966650 source:d:\git\3dimg2015\3dimg_proj2015\src\snapjob.cpp
+	"SnapJob.h"
+
+1445973823 d:\git\3dimg2015\3dimg_proj2015\include\snapjob.h
+
+1452181853 source:d:\git\3dimg2015\3dimg_proj2015\main.cpp
+	<iostream>
+	"CImg.h"
+	"Snap.h"
+	"Point.h"
+	<string>
+	<fstream>
+	<sstream>
+	<vector>
+	"include\vectorOps.h"
+	"include\PathRenderer.h"
+
+1450632896 d:\git\3dimg2015\3dimg_proj2015\cimg.h
+	<cstdio>
+	<cstdlib>
+	<cstdarg>
+	<cstring>
+	<cmath>
+	<climits>
+	<ctime>
+	<exception>
+	<stdio.h>
+	<sys/types.h>
+	<sys/time.h>
+	<sys/stat.h>
+	<unistd.h>
+	<dirent.h>
+	<fnmatch.h>
+	<windows.h>
+	<shlobj.h>
+	<process.h>
+	<io.h>
+	<initializer_list>
+	<utility>
+	<X11/Xlib.h>
+	<X11/Xutil.h>
+	<X11/keysym.h>
+	<pthread.h>
+	<sys/ipc.h>
+	<sys/shm.h>
+	<X11/extensions/XShm.h>
+	<X11/extensions/Xrandr.h>
+	<omp.h>
+	<cstddef>
+	"cv.h"
+	"highgui.h"
+	"png.h"
+	"jpeglib.h"
+	"setjmp.h"
+	"tiffio.h"
+	"minc_io_simple_volume.h"
+	"minc_1_simple.h"
+	"minc_1_simple_rw.h"
+	"zlib.h"
+	"curl/curl.h"
+	"Magick++.h"
+	"fftw3.h"
+	"Board.h"
+	"ImfRgbaFile.h"
+	"ImfInputFile.h"
+	"ImfChannelList.h"
+	"ImfMatrixAttribute.h"
+	"ImfArray.h"
+	"CImg.h"
+	<stdint.h>
+
+1452182110 d:\git\3dimg2015\3dimg_proj2015\include\snap.h
+	"../CImg.h"
+	<iostream>
+
+1452181657 source:d:\git\3dimg2015\3dimg_proj2015\src\snap.cpp
+	"Snap.h"
+	"..\include\vectorOps.h"
+
+1446216608 d:\git\3dimg2015\3dimg_proj2015\include\point.h
+
+1446216698 source:d:\git\3dimg2015\3dimg_proj2015\src\point.cpp
+	"Point.h"
+	<stdlib.h>
+
+1446121161 d:\git\3dimg2015\3dimg_proj2015\src\vectorops.c
+
+1446214144 d:\git\3dimg2015\3dimg_proj2015\include\vectorops.h
+
+1446214144 source:d:\git\3dimg2015\3dimg_proj2015\src\vectorops.cpp
+	"vectorOps.h"
+	<cmath>
+
+1452183405 source:d:\git\3dimg2015\3dimg_proj2015\src\pathrenderer.cpp
+	"PathRenderer.h"
+
+1452182867 d:\git\3dimg2015\3dimg_proj2015\include\pathrenderer.h
+	<cstddef>
+	<iostream>
+	"..\CImg.h"
+	"Snap.h"
+	"Point.h"
+	<string>
+	<fstream>
+	<sstream>
+	<vector>
+	"vectorOps.h"
+

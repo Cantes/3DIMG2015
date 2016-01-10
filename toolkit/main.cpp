@@ -5,7 +5,7 @@ using namespace std;
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include<vector>
+#include <vector>
 #include "CImg.h"
 
 using namespace cimg_library;
